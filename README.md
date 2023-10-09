@@ -2,17 +2,21 @@
 
 ## pile up rejection
 
-Version: 4.0
+Version: 4.1
 
 Author: Yige Huang
 
-Date: 05.10.2023
+Date: 09.10.2023
 
 ## Quick Start
 
 -
 
 ## Change Log
+
+09.10.2023 by yghuang (4.1):
+
+> Now X-axis and Y-axis are exchanged (for better polynomial fit).
 
 05.10.2023 by yghuang (4.0):
 

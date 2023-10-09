@@ -111,9 +111,9 @@ int CentUtil::GetCentrality9(int ref3) {
 }
 
 bool CentUtil::IsBetaEta1PileUp(int ref3, int beta_eta1) {
-    return betaEta1UpperPoly3->Eval(ref3) < beta_eta1 || betaEta1LowerPoly3->Eval(ref3) > beta_eta1 || beta_eta1 <= 1;
+    return betaEta1UpperPoly3->Eval(beta_eta1) < ref3 || betaEta1LowerPoly3->Eval(beta_eta1) > ref3 || beta_eta1 <= 1;
 }
 
 bool CentUtil::IsNTofMatchPileUp(int ref3, int nTofMatch) {
-    return nTofMatchUpperPoly3->Eval(ref3) < nTofMatch || nTofMatchLowerPoly3->Eval(ref3) > nTofMatch || nTofMatch <= 1;
+    return nTofMatchUpperPoly3->Eval(nTofMatch) < ref3 || nTofMatchLowerPoly3->Eval(nTofMatch) > ref3 || nTofMatch <= 1;
 }

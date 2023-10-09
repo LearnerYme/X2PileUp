@@ -10,8 +10,8 @@
 
 void NbdFitCore::Init(TH2F* h2) {
     this->h2 = h2;
-    x1 = h2->GetXaxis()->GetBinLowEdge(1);
-    x2 = h2->GetXaxis()->GetBinLowEdge(h2->GetNbinsX()+1);
+    x1 = h2->GetYaxis()->GetBinLowEdge(1);
+    x2 = h2->GetYaxis()->GetBinLowEdge(h2->GetNbinsY()+1);
     fNbd = new TF1("MyDoubleNbd", "[0]*ROOT::Math::negative_binomial_pdf(x, [1], [2])+[3]*ROOT::Math::negative_binomial_pdf(x, [4], [5])", x1, x2);
     std::cout << "[LOG] - From NbdFitCore: Read 2D histogram succeed." << std::endl;
     std::cout << "[LOG] - From NbdFitCore: TH2F name is " << h2->GetTitle() << std::endl;
@@ -21,9 +21,9 @@ void NbdFitCore::Init(TH2F* h2) {
 }
 
 void NbdFitCore::DoFit(double x1, double x2) {
-    h2->GetYaxis()->SetRangeUser(x1, x2);
-    h1 = (TH1F*)h2->ProjectionX();
-    h1->SetTitle(Form("%s within %.1f to %.1f", h2->GetYaxis()->GetTitle(), x1, x2));
+    h2->GetXaxis()->SetRangeUser(x1, x2);
+    h1 = (TH1F*)h2->ProjectionY();
+    h1->SetTitle(Form("%s within %.1f to %.1f", h2->GetXaxis()->GetTitle(), x1, x2));
     h1->Scale(1.0 / h1->Integral());
 
     // initialize parameters

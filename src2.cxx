@@ -54,14 +54,14 @@ int main(){
     TH1F* h1Ref3 = new TH1F("h1RefMult3", ";RefMult3;", 850, -0.5, 849.5);
 
     TH2F* h2Ref3VsNTofMatch = new TH2F(
-        "h2Ref3VsNTofMatch", ";RefMult3;nTofMatch",
-        850, -0.5, 849.5,
-        300, -0.5, 299.5
+        "h2Ref3VsNTofMatch", ";nTofMatch;RefMult3",
+        300, -0.5, 299.5,
+        850, -0.5, 849.5
     );
     TH2F* h2Ref3VsBetaEta1 = new TH2F(
-        "h2Ref3VsBetaEta1", ";RefMult3;beta_eta1",
-        850, -0.5, 849.5,
-        500, -0.5, 499.5
+        "h2Ref3VsBetaEta1", ";beta_eta1;RefMult3",
+        500, -0.5, 499.5,
+        850, -0.5, 849.5
     );
 
     for (Int_t i=0; i<nev; i++) {
@@ -72,8 +72,8 @@ int main(){
         }
         if (corr->IsPileUp(maker->ref3, maker->beta_eta1, maker->nTofMatch)) { continue; }
         h1Ref3->Fill(maker->ref3);
-        h2Ref3VsNTofMatch->Fill(maker->ref3, maker->nTofMatch);
-        h2Ref3VsBetaEta1->Fill(maker->ref3, maker->beta_eta1);
+        h2Ref3VsNTofMatch->Fill(maker->nTofMatch, maker->ref3);
+        h2Ref3VsBetaEta1->Fill(maker->beta_eta1, maker->ref3);
     }
 
 

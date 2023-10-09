@@ -24,25 +24,25 @@ namespace cent_conf {
         /*
             3th order polynomial parameters.
         */
-        9.71969, 0.532913, -0.00069537, 7.97491e-07
+        50.8123, 3.48025, 0.0109673, -5.92909e-05
     };
     static double nTofMatch_lower_pars[4] = {
         /*
             3th order polynomial parameters.
         */
-        -57.9111, 0.742572, -0.00156223, 1.42066e-06
+        -13.546, 1.39532, 0.0122539, -3.23417e-05
     };
     static double beta_eta1_upper_pars[4] = {
         /*
             3th order polynomial parameters.
         */
-        11.328, 0.790262, -0.000576608, 5.67717e-07
+        37.9077, 1.85666, 0.00370279, -1.01181e-05
     };
     static double beta_eta1_lower_pars[4] = {
         /*
             3th order polynomial parameters.
         */
-        -65.424, 1.01763, -0.00186575, 1.74405e-06
+        -13.3618, 1.15569, 0.00222227, -3.21415e-06
     };
 
     // luminosity arguments

@@ -20,18 +20,20 @@ int main(int argc, char** argv) {
     TH2F* h2 = (TH2F*)tf->Get(argv[2]);
     TH1F* h1;
 
-    double y1 = h2->GetYaxis()->GetXmin();
-    double y2 = h2->GetYaxis()->GetXmax();
+    double xMin = h2->GetXaxis()->GetXmin();
+    double xMax = h2->GetXaxis()->GetXmax();
 
     NbdFitCore ff;
     ff.Init(h2);
 
+    // x1 and x2 is for the range of slices and fit
+    // xMin and xMax just indicates the axis range
     int x1 = atoi(argv[3]);
     int x2 = atoi(argv[4]);
     int nBins = atoi(argv[5]);
     double stride = (x2 - x1)*1.0 / nBins;
 
-    std::cout << "[LOG] - From Main: Slice (of Y-axis) from " << x1 << " to " << x2 << " with " << nBins << " steps, stride: " << stride << std::endl;
+    std::cout << "[LOG] - From Main: Slice (of X-axis) from " << x1 << " to " << x2 << " with " << nBins << " steps, stride: " << stride << std::endl;
 
     const char* sname = argv[6];
     std::cout << "[LOG] - From Main: The out put file will named as: " << sname << ".pdf / .png" << std::endl;
@@ -72,7 +74,7 @@ int main(int argc, char** argv) {
     lineM->SetLineStyle(4);
     lineM->SetLineWidth(3);
 
-    TLegend* leg = new TLegend(0.15, 0.67, 0.42, 0.88);
+    TLegend* leg = new TLegend(0.57, 0.14, 0.87, 0.47);
     leg->SetLineWidth(0);
 
     gStyle->SetOptStat(0);
@@ -88,9 +90,10 @@ int main(int argc, char** argv) {
         ff.DoFit(x1+i*stride, x1+(i+1)*stride);
         mult[i] = x1+(i+0.5)*stride;
         mean[i] = ff.GetMode();
-        lower[i] = ff.GetRightBoundary(lowerN);
-        upper[i] = ff.GetLeftBoundary(upperN);
-        // std::cout << "[DEBUG] bin " << i << " x from " << x1+i*stride << " to " << x1+(i+1)*stride << ", mean  " << mean[i] << ", upper " << upper[i] << ", lower " << lower[i] << std::endl;
+        // lower[i] = ff.GetRightBoundary(lowerN);
+        // upper[i] = ff.GetLeftBoundary(upperN);
+        upper[i] = ff.GetRightBoundary(upperN);
+        lower[i] = ff.GetLeftBoundary(lowerN);
         c->Clear();
         c->cd();
         gPad->SetLogy();
@@ -107,13 +110,13 @@ int main(int argc, char** argv) {
     // make the heatmap (with boundary)
     c->Clear();
     c->cd();
-    h2->GetYaxis()->SetRangeUser(y1, y2);
+    h2->GetXaxis()->SetRangeUser(xMin, xMax);
     h2->Draw("colz");
     gPad->SetLogy(false);
     gPad->SetLogz();
-    TGraph* tgMode = new TGraph(nBins, mean, mult);
-    TGraph* tgUpper = new TGraph(nBins, upper, mult);
-    TGraph* tgLower = new TGraph(nBins, lower, mult);
+    TGraph* tgMode = new TGraph(nBins, mult, mean);
+    TGraph* tgUpper = new TGraph(nBins, mult, upper);
+    TGraph* tgLower = new TGraph(nBins, mult, lower);
     tgMode->SetMarkerStyle(24);
     tgUpper->SetMarkerStyle(22);
     tgLower->SetMarkerStyle(23);
@@ -127,8 +130,10 @@ int main(int argc, char** argv) {
     tgUpper->Draw("psame");
     tgLower->Draw("psame");
 
-    TF1* funcUpper = new TF1("fUpper", "pol3", h2->GetXaxis()->GetXmin(), h2->GetXaxis()->GetXmax());
-    TF1* funcLower = new TF1("fLower", "pol3", h2->GetXaxis()->GetXmin(), h2->GetXaxis()->GetXmax());
+    // TF1* funcUpper = new TF1("fUpper", "pol3", h2->GetYaxis()->GetXmin(), h2->GetYaxis()->GetXmax());
+    // TF1* funcLower = new TF1("fLower", "pol3", h2->GetYaxis()->GetXmin(), h2->GetYaxis()->GetXmax());
+    TF1* funcUpper = new TF1("fUpper", "pol3", 0, x2);
+    TF1* funcLower = new TF1("fLower", "pol3", 0, x2);
 
     tgUpper->Fit(funcUpper, "RNQ");
     tgLower->Fit(funcLower, "RNQ");
@@ -138,8 +143,8 @@ int main(int argc, char** argv) {
     tgUpper->SetLineStyle(2);
     tgLower->SetLineStyle(2);
 
-    tgUpper->Draw("lsame");
-    tgLower->Draw("lsame");
+    funcUpper->Draw("lsame");
+    funcLower->Draw("lsame");
 
     std::cout << "[LOG] - From Main: The fit results: Upper line polynomial(3) parameters are: ";
     std::cout << funcUpper->GetParameter(0) << ", " << funcUpper->GetParameter(1) << ", " << funcUpper->GetParameter(2) << ", " << funcUpper->GetParameter(3) << std::endl;
@@ -147,8 +152,8 @@ int main(int argc, char** argv) {
     std::cout << funcLower->GetParameter(0) << ", " << funcLower->GetParameter(1) << ", " << funcLower->GetParameter(2) << ", " << funcLower->GetParameter(3) << std::endl;
 
     leg->AddEntry(tgMode, "Mode", "p");
-    leg->AddEntry(tgUpper, Form("Upper cut: %.1f#sigma", upperN), "lp");
-    leg->AddEntry(tgLower, Form("Lower cut: %.1f(1+S)#sigma", lowerN), "lp");
+    leg->AddEntry(tgUpper, Form("Uppder cut: %.1f(1+S)#sigma", upperN), "lp");
+    leg->AddEntry(tgLower, Form("Lower cut: %.1f#sigma", lowerN), "lp");
 
     leg->Draw("same");
 
