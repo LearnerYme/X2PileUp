@@ -19,8 +19,9 @@ void plot(){
     // beta eta 1
     c->cd(1);
     tf1->GetObject("h2Ref3VsBetaEta1", th21);
-    th21->SetTitle("Raw;;");
+    th21->SetTitle("Raw;;RefMult3");
     gPad->SetRightMargin(0);
+    gPad->SetBottomMargin(0.04);
     gPad->SetLogz();
     th21->Draw("col");
     tfunc->SetParameters(cent_conf::beta_eta1_upper_pars);
@@ -31,14 +32,15 @@ void plot(){
     tf2->GetObject("h2Ref3VsBetaEta1", th22);
     th22->SetTitle("Pile up rejected;;");
     gPad->SetLeftMargin(0);
+    gPad->SetBottomMargin(0.04);
     gPad->SetLogz();
     th22->Draw("col");
-    lat->DrawLatex(200, 350, "Beta_eta1");
+    lat->DrawLatex(150, 100, "Beta_eta1");
 
     // nTofMatch
     c->cd(3);
     tf1->GetObject("h2Ref3VsNTofMatch", th21);
-    th21->SetTitle(";;");
+    th21->SetTitle(";;RefMult3");
     gPad->SetTopMargin(0);
     gPad->SetRightMargin(0);
     gPad->SetLogz();
@@ -47,6 +49,8 @@ void plot(){
     tfunc->DrawClone("lsame");
     tfunc->SetParameters(cent_conf::nTofMatch_lower_pars);
     tfunc->DrawClone("lsame");
+    lat->DrawLatex(110, 200, "STAR BES-II");
+    lat->DrawLatex(110, 100, "Au+Au @ 17.3");
 
     c->cd(4);
     tf2->GetObject("h2Ref3VsNTofMatch", th22);
@@ -55,9 +59,7 @@ void plot(){
     gPad->SetLeftMargin(0);
     gPad->SetLogz();
     th22->Draw("col");
-    lat->DrawLatex(200, 250, "nTofMatch");
-    lat->DrawLatex(300, 50, "STAR BES-II");
-    lat->DrawLatex(300, 20, "Au+Au @ 17.3");
+    lat->DrawLatex(150, 100, "nTofMatch");
 
     c->Print("pileup_plots.pdf");
     c->Print("pileup_plots.png");
@@ -67,6 +69,8 @@ void plot(){
     gPad->SetLogy();
     TH1D* h1 = (TH1D*)tf1->Get("h1RefMult3");
     TH1D* h2 = (TH1D*)tf2->Get("h1RefMult3");
+    TH1D* hdiff = (TH1D*)h1->Clone();
+    hdiff->Add(h2, -1);
     h1->SetTitle(";RefMult3;Counts");
     h1->SetLineColor(4);
     h2->SetLineColor(2);
@@ -74,9 +78,15 @@ void plot(){
     h2->SetMarkerColor(2);
     h1->Draw("epl");
     h2->Draw("eplsame");
+
+    hdiff->SetMarkerColor(40);
+    hdiff->SetLineColor(40);
+    hdiff->Draw("eplsame");
+
     TLegend* leg = new TLegend(0.15, 0.15, 0.43, 0.43);
     leg->AddEntry(h1, "Raw", "epl");
-    leg->AddEntry(h2, "Pile up rejected", "epl");
+    leg->AddEntry(h2, "Pile-up rejected", "epl");
+    leg->AddEntry(hdiff, "Pile up events", "epl");
     leg->Draw();
     lat->SetTextSize(0.06);
     lat->DrawLatex(100, 2e4, "STAR BES-II");
