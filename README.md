@@ -2,17 +2,21 @@
 
 ## pile up rejection
 
-Version: 4.1
+Version: 4.2
 
 Author: Yige Huang
 
-Date: 09.10.2023
+Date: 10.10.2023
 
 ## Quick Start
 
 -
 
 ## Change Log
+
+10.10.2023 by yghuang (4.2):
+
+> Now will read centrality bin edge by default. If it is not specified, just do not use GetCentrality9().
 
 09.10.2023 by yghuang (4.1):
 
